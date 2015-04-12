@@ -64,7 +64,7 @@ public class BeehiveDB {
             se.printStackTrace();
         }
 
-        String prepStatInsert = "INSERT INTO Beehive VALUES ( ?,?,?)";
+        String prepStatInsert = "INSERT INTO Beehive(location,date,weight) VALUES ( ?,?,?)";
         try{
             psInsert = conn.prepareStatement(prepStatInsert);
             allStatements.add(psInsert);

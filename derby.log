@@ -1,0 +1,13 @@
+----------------------------------------------------------------
+Sun Apr 12 14:14:34 CDT 2015:
+Booting Derby version The Apache Software Foundation - Apache Derby - 10.11.1.1 - (1616546): instance a816c00e-014c-af0e-04a7-000000cc60d0 
+on database directory C:\Users\marty.farley\IdeaProjects\Beekeeper\beehiveDB with class loader sun.misc.Launcher$AppClassLoader@a14482 
+Loaded from file:/C:/Users/marty.farley/.IntelliJIdea14/config/jdbc-drivers/derby-10.11.1.1.jar
+java.vendor=Oracle Corporation
+java.runtime.version=1.8.0_31-b13
+user.dir=C:\Users\marty.farley\IdeaProjects\Beekeeper
+os.name=Windows 7
+os.arch=x86
+os.version=6.1
+derby.system.home=null
+Database Class Loader started - derby.database.classpath=''

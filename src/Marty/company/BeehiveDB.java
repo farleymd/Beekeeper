@@ -190,6 +190,30 @@ public class BeehiveDB {
             }
 
         }
+
+        try {
+            if (statement != null){
+                statement.close();
+            }
+        } catch (SQLException se){
+            se.printStackTrace();
+        }
+
+        String deletedbSQL = "DROP TABLE Beehive";
+        try {
+            statement.executeUpdate(deletedbSQL);
+        } catch (SQLException se){
+            se.printStackTrace();
+        }
+
+        try {
+            if (conn != null){
+                conn.close();
+            }
+        } catch (SQLException se){
+            se.printStackTrace();
+        }
     }
+
 
 }

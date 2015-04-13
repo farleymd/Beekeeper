@@ -38,12 +38,12 @@ public class BeehiveDB {
             //Create a table in the database. Stores today's date, and the min and max temperatures recorded.
 
             String createTableSQL = "CREATE TABLE Beehive (BeehiveID int NOT NULL GENERATED ALWAYS " +
-                    "AS IDENTITY (START WITH 1, INCREMENT BY 1), Location varchar(60)," +
+                    "AS IDENTITY (START WITH 1, INCREMENT BY 1), Location varchar(60), HiveNum int" +
                     "Date date, Weight double)";
             String deleteTableSQL = "DROP TABLE temp";
             try {
                 statement.executeUpdate(createTableSQL);
-                System.out.println("Created temp table");
+                System.out.println("Created table");
             } catch (SQLException sqle) {
                 //Seems the table already exists. Delete it and recreate it
                 try {
@@ -64,20 +64,41 @@ public class BeehiveDB {
             se.printStackTrace();
         }
 
-        String prepStatInsert = "INSERT INTO Beehive(location,date,weight) VALUES ( ?,?,?)";
+        String prepStatInsert = "INSERT INTO Beehive(location, hivenum, date,weight) VALUES ( ?,?,?,?)";
         try{
             psInsert = conn.prepareStatement(prepStatInsert);
             allStatements.add(psInsert);
 
             psInsert.setString(1,"North");
-            psInsert.setDate(2,java.sql.Date.valueOf("2014-04-01"));
-            psInsert.setDouble(3, 3.40);
+            psInsert.setInt(2,1);
+            psInsert.setDate(3,java.sql.Date.valueOf("2014-04-01"));
+            psInsert.setDouble(4, 3.40);
             psInsert.executeUpdate();
 
             psInsert.setString(1,"South");
-            psInsert.setDate(2,java.sql.Date.valueOf("2014-04-01"));
-            psInsert.setDouble(3,5.00);
+            psInsert.setInt(2,2);
+            psInsert.setDate(3,java.sql.Date.valueOf("2014-04-01"));
+            psInsert.setDouble(4,5.00);
             psInsert.executeUpdate();
+
+            String fetchAllDataSQL = "SELECT * from Beehive";
+
+            try {
+                resultSet = statement.executeQuery(fetchAllDataSQL);
+                while (resultSet.next()){
+                    int beehiveID = resultSet.getInt("BeehiveID");
+                    String locationString = resultSet.getString("Location");
+                    int numString = resultSet.getInt("HiveNum");
+                    Date dateString = resultSet.getDate("Date");
+                    double weightString = resultSet.getDouble("Weight");
+
+                    System.out.println("BeehiveID:" + beehiveID + " Location: " + locationString +
+                            "Hive Number: " + numString +  " Date Collected: " + dateString +
+                            " Weight of Honey: " + weightString);
+                }
+            } catch (SQLException se){
+                se.printStackTrace();
+            }
 
         } catch (SQLException se){
             se.printStackTrace();
@@ -148,14 +169,16 @@ public class BeehiveDB {
                 if (resultSet.next()){
                     locationFound = true;
                     String location = resultSet.getString("Location");
-                    System.out.print("What would you like to update, date or weight for location " + location);
+                    System.out.print("What would you like to update, date or weight for location " + location + "?");
                     String userChoice = scanner.nextLine();
 
                     if (userChoice.equalsIgnoreCase("date")){
                         Date dateUpdate = new Date();
                         try {
                             DateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-                            dateUpdate = format.parse(userChoice);
+                            System.out.println("On what date was the honey collected?");
+                            String userDate = scanner.nextLine();
+                            dateUpdate = format.parse(userDate);
                         }catch (java.text.ParseException pe){
                             pe.printStackTrace();
                         }
@@ -167,7 +190,9 @@ public class BeehiveDB {
                         resultSet.close();
                         break;
                     } else if (userChoice.equalsIgnoreCase("weight")){
-                        double weightUpdate = Double.parseDouble(userChoice);
+                        System.out.print("What is the new honey weight?");
+                        String honeyWeight = scanner.nextLine();
+                        double weightUpdate = Double.parseDouble(honeyWeight);
 
                         String updateWeightSQL = "UPDATE Beehive SET weight = " + weightUpdate + " where location"
                                 + " = '" + location + "'";
@@ -190,6 +215,13 @@ public class BeehiveDB {
             }
 
         }
+
+        //Display total honey from all hives combined for any one year
+        //Display total honey from one particular hive for all years
+        //Display best year and total honey for one particular hive
+        //Which hives produced the most honey last year? which hives produced less honey than previous years?
+        //Display total honey in ranked over (date and honey)
+        //which hive produces most honey overall, which produces least
 
         try {
             if (statement != null){
